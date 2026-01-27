@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>My Simple Shop</title>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
   <style>
     :root{
       --bg:#fbfaff;
@@ -27,9 +31,14 @@
     html,body{ height:100%; }
     body{
       margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Prompt";
+      font-family: "Prompt", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto;
       color:var(--text);
       background:
+        url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'>\
+  <text x='16' y='84' font-size='56' fill='%23c4b5fd' opacity='0.12'>❤</text>\
+  <text x='86' y='34' font-size='28' fill='%23f5d0fe' opacity='0.16'>❤</text>\
+</svg>") repeat,
         radial-gradient(900px 420px at 8% -10%, rgba(167,139,250,.35), transparent 62%),
         radial-gradient(900px 420px at 92% 8%, rgba(245,208,254,.45), transparent 60%),
         radial-gradient(1100px 500px at 50% 110%, rgba(196,181,253,.35), transparent 65%),
@@ -115,18 +124,15 @@
     }
     .heroGrid{
       display:grid;
-      grid-template-columns: 1.2fr .8fr;
+      grid-template-columns: 1fr;
       gap:18px;
       align-items:center;
     }
-    @media (max-width:900px){
-      .heroGrid{ grid-template-columns: 1fr; }
-    }
     .hero h1{
       margin:0;
-      font-size:34px;
+      font-size:38px;
       letter-spacing:.2px;
-      line-height:1.1;
+      line-height:1.05;
     }
     .hero p{
       margin:10px 0 0;
@@ -159,32 +165,9 @@
     }
     .btn:hover{ transform: translateY(-1px); filter: brightness(1.02); }
 
-    .heroCard{
-      background: rgba(255,255,255,.78);
-      border:1px solid rgba(234,223,255,.95);
-      border-radius: 22px;
-      padding:14px;
-      box-shadow: var(--shadow2);
-    }
-    .heroCard .row{
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-      padding:10px 10px;
-      border-radius:16px;
-      background: rgba(255,255,255,.65);
-      border:1px dashed rgba(167,139,250,.35);
-    }
-    .heroCard .k{ font-size:12px; color:var(--muted); font-weight:800; }
-    .heroCard .v{ font-size:13px; font-weight:900; }
-    .heroCard .hint{
-      margin-top:10px;
-      font-size:12px;
-      color: var(--muted);
-      font-weight:700;
-    }
-
     /* Section heading */
     .sectionHead{
-      margin-top:20px;
+      margin-top:22px;
       display:flex; align-items:flex-end; justify-content:space-between; gap:12px;
       padding:0 4px;
     }
@@ -403,7 +386,6 @@
 </head>
 
 <body>
-  <!-- Topbar -->
   <div class="topbar">
     <div class="inner">
       <div class="brand">
@@ -424,7 +406,6 @@
   </div>
 
   <div class="wrap">
-    <!-- Hero -->
     <section class="hero">
       <div class="heroGrid">
         <div>
@@ -432,31 +413,13 @@
           <p>ดูสินค้า → กดสั่งซื้อ → ระบบบันทึกออเดอร์เข้าชีตทันที (เหมาะกับร้านเริ่มต้น)</p>
 
           <div class="heroActions">
-            <button class="btn btnPrimary" onclick="scrollToProducts()">
-              🛍️ ดูสินค้า
-            </button>
-            <button class="btn btnGhost" onclick="openHelp()">
-              💬 วิธีสั่งซื้อ
-            </button>
-          </div>
-        </div>
-
-        <div class="heroCard">
-          <div class="row">
-            <div>
-              <div class="k">ระบบหลังบ้าน</div>
-              <div class="v">Google Sheet</div>
-            </div>
-            <div class="badge">MVP → ร้านจริง</div>
-          </div>
-          <div class="hint">
-            ทิป: ใส่รูปสินค้าในคอลัมน์ <b>img</b> (ลิงก์รูป) จะดูเป็นร้านจริงขึ้น x10
+            <button class="btn btnPrimary" onclick="scrollToProducts()">🛍️ ดูสินค้า</button>
+            <button class="btn btnGhost" onclick="openHelp()">💬 วิธีสั่งซื้อ</button>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Products -->
     <div class="sectionHead" id="products">
       <div>
         <div class="title">สินค้าทั้งหมด</div>
@@ -465,14 +428,11 @@
       <div class="desc" id="count"></div>
     </div>
 
-    <div class="grid" id="grid">
-      <!-- skeleton default -->
-    </div>
+    <div class="grid" id="grid"></div>
 
     <footer>© <span id="year"></span> My Simple Shop • ทำด้วยความพยายามและกาแฟ 1 แก้ว</footer>
   </div>
 
-  <!-- Modal -->
   <div class="modalBack" id="modalBack">
     <div class="modal">
       <div class="modalHead">
@@ -521,204 +481,6 @@
     </div>
   </div>
 
-<script>
-  // ✅ ใส่ลิงก์ Web App (/exec) ของ Google Apps Script ตรงนี้
-  const API_URL = "https://script.google.com/macros/s/AKfycbwPExSc4fYjJlAwzHdf02CRrMiFjOMU9aPUy3wSDWhoAmV0roCxKXIyk9rh7SY8XL8EHg/exec";
-
-  const grid = document.getElementById("grid");
-  const statusEl = document.getElementById("status");
-  const dotEl = document.getElementById("dot");
-  const countEl = document.getElementById("count");
-
-  const modalBack = document.getElementById("modalBack");
-  const btnClose = document.getElementById("btnClose");
-  const btnSubmit = document.getElementById("btnSubmit");
-  const msgEl = document.getElementById("msg");
-
-  const mName = document.getElementById("mName");
-  const mPrice = document.getElementById("mPrice");
-  const summaryEl = document.getElementById("summary");
-
-  const fName = document.getElementById("fName");
-  const fPhone = document.getElementById("fPhone");
-  const fQty = document.getElementById("fQty");
-  const fAddress = document.getElementById("fAddress");
-  const fNote = document.getElementById("fNote");
-
-  document.getElementById("year").textContent = new Date().getFullYear();
-
-  let selected = null;
-
-  renderSkeleton(8);
-  init();
-
-  function scrollToProducts(){
-    document.getElementById("products").scrollIntoView({ behavior:"smooth", block:"start" });
-  }
-
-  function openHelp(){
-    alert("วิธีสั่งซื้อ:\\n1) เลือกสินค้าแล้วกดสั่งซื้อ\\n2) กรอกชื่อ/เบอร์/ที่อยู่\\n3) กดยืนยัน ระบบจะออกเลขออเดอร์ให้\\n(หลังบ้านไปดูที่ Google Sheet: ORDERS)");
-  }
-
-  async function init(){
-    try{
-      if(!API_URL || API_URL.includes("PUT_YOUR_WEB_APP_URL_HERE")){
-        throw new Error("ยังไม่ได้ใส่ API_URL (ลิงก์ /exec ของ Apps Script)");
-      }
-
-      const url = API_URL + "?action=listProducts";
-      const res = await fetch(url);
-      const json = await res.json();
-
-      if(!json.ok) throw new Error(json.error || "โหลดสินค้าไม่สำเร็จ");
-
-      const items = json.data || [];
-      renderProducts(items);
-
-      statusEl.textContent = "พร้อมขายแล้ว 💜";
-      dotEl.classList.add("ok");
-    }catch(err){
-      statusEl.textContent = "มีปัญหาในการโหลด";
-      dotEl.classList.remove("ok");
-      grid.innerHTML = `<div class="pill" style="grid-column:1/-1;justify-content:center;">
-        ❌ ${escapeHtml(String(err))}
-      </div>`;
-    }
-  }
-
-  function renderSkeleton(n){
-    grid.innerHTML = Array.from({length:n}).map(() => `
-      <div class="skel">
-        <div class="img"></div>
-        <div class="bar" style="width:70%"></div>
-        <div class="bar" style="width:45%"></div>
-        <div class="bar" style="width:85%; height:40px; border-radius:16px"></div>
-      </div>
-    `).join("");
-  }
-
-  function renderProducts(items){
-    countEl.textContent = items.length ? `${items.length} รายการ` : "";
-    if(!items.length){
-      grid.innerHTML = `<div class="pill" style="grid-column:1/-1;justify-content:center;">
-        ยังไม่มีสินค้าในระบบ (ไปเพิ่มในชีต PRODUCTS แล้วตั้ง status = active)
-      </div>`;
-      return;
-    }
-
-    grid.innerHTML = items.map(p => {
-      const safe = {
-        id: String(p.id||""),
-        name: String(p.name||""),
-        price: Number(p.price||0),
-        img: String(p.img||"")
-      };
-
-      const hasImg = !!safe.img;
-      return `
-        <div class="card">
-          <div class="thumb">
-            ${hasImg ? `<img src="${escapeAttr(safe.img)}" alt="${escapeAttr(safe.name)}" onerror="this.remove(); this.parentElement.querySelector('.ph').style.display='block';" />` : ``}
-            <div class="ph" style="display:${hasImg ? "none" : "block"};">ไม่มีรูปสินค้า</div>
-          </div>
-
-          <div class="pad">
-            <div class="name">${escapeHtml(safe.name)}</div>
-
-            <div class="priceLine">
-              <div class="price">฿${safe.price.toLocaleString()}</div>
-              <div class="badge">พร้อมส่ง</div>
-            </div>
-
-            <button class="buyBtn" onclick='openBuy(${JSON.stringify(safe)})'>
-              🛒 สั่งซื้อเลย
-            </button>
-          </div>
-        </div>
-      `;
-    }).join("");
-  }
-
-  window.openBuy = (p) => {
-    selected = p;
-
-    msgEl.textContent = "";
-    msgEl.className = "msg";
-
-    mName.textContent = "สั่งซื้อ: " + p.name;
-    mPrice.textContent = "ราคา: ฿" + Number(p.price||0).toLocaleString();
-
-    fQty.value = 1;
-    fNote.value = "";
-    summaryEl.textContent = `รวมโดยประมาณ: ฿${Number(p.price||0).toLocaleString()}`;
-
-    modalBack.style.display = "flex";
-    setTimeout(()=>fName.focus(), 50);
-  };
-
-  btnClose.onclick = () => modalBack.style.display = "none";
-  modalBack.addEventListener("click", (e)=>{ if(e.target === modalBack) modalBack.style.display="none"; });
-
-  fQty.addEventListener("input", ()=>{
-    if(!selected) return;
-    const qty = Math.max(1, Number(fQty.value||1));
-    const total = Number(selected.price||0) * qty;
-    summaryEl.textContent = `รวมโดยประมาณ: ฿${total.toLocaleString()}`;
-  });
-
-  btnSubmit.onclick = async () => {
-    if(!selected) return;
-
-    const qty = Math.max(1, Number(fQty.value || 1));
-    const payload = {
-      action: "createOrder",
-      productId: String(selected.id).trim(),
-      qty,
-      customerName: fName.value.trim(),
-      phone: fPhone.value.trim(),
-      address: fAddress.value.trim(),
-      note: fNote.value.trim()
-    };
-
-    if(!payload.customerName || !payload.phone || !payload.address){
-      msgEl.textContent = "กรอกชื่อ/เบอร์/ที่อยู่ให้ครบก่อนนะ";
-      msgEl.className = "msg bad";
-      return;
-    }
-
-    btnSubmit.disabled = true;
-    msgEl.textContent = "กำลังบันทึกออเดอร์…";
-    msgEl.className = "msg";
-
-    try{
-      const res = await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-      const json = await res.json();
-      if(!json.ok) throw new Error(json.error || "สั่งซื้อไม่สำเร็จ");
-
-      const total = Number(json.data.total || 0);
-      msgEl.textContent = `สำเร็จ ✅ เลขออเดอร์: ${json.data.orderId} | รวม ฿${total.toLocaleString()}`;
-      msgEl.className = "msg ok";
-
-      // optional: auto close after a bit
-      // setTimeout(()=> modalBack.style.display="none", 2000);
-    }catch(err){
-      msgEl.textContent = "พังแล้ว ❌ " + String(err);
-      msgEl.className = "msg bad";
-    }finally{
-      btnSubmit.disabled = false;
-    }
-  };
-
-  function escapeHtml(s){
-    return String(s).replace(/[&<>"']/g, m => ({
-      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-    }[m]));
-  }
-  function escapeAttr(s){ return escapeHtml(s).replace(/"/g,'&quot;'); }
-</script>
+  <script type="module" src="./app.js"></script>
 </body>
 </html>
