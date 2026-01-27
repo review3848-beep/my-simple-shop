@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>My Simple Shop</title>
+  <style>
+    :root{
+      --bg:#0b1220; --panel:rgba(255,255,255,.06); --border:rgba(255,255,255,.14);
+      --text:#e5e7eb; --muted:#9ca3af; --accent:#22c55e;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto;color:var(--text);background:radial-gradient(1200px 600px at 20% -10%, rgba(34,197,94,.18), transparent 60%), var(--bg)}
+    .wrap{max-width:1100px;margin:0 auto;padding:24px}
+    header{display:flex;gap:14px;align-items:center;justify-content:space-between;margin-bottom:18px}
+    h1{font-size:20px;margin:0}
+    .sub{color:var(--muted);font-size:13px}
+    .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+    @media (max-width:980px){.grid{grid-template-columns:repeat(2,1fr)}}
+    @media (max-width:520px){.grid{grid-template-columns:1fr}}
+    .card{background:var(--panel);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+    .img{width:100%;height:180px;background:#111827;display:block;object-fit:cover}
+    .pad{padding:12px}
+    .name{font-weight:650}
+    .price{margin-top:6px;color:#bbf7d0}
+    button{cursor:pointer;border:0;border-radius:12px;padding:10px 12px;background:var(--accent);color:#052e14;font-weight:700;width:100%}
+    button:disabled{opacity:.6;cursor:not-allowed}
+    .row{display:flex;gap:10px}
+    .row > *{flex:1}
+    input, textarea{
+      width:100%; padding:10px 12px; border-radius:12px;
+      border:1px solid var(--border); background:rgba(255,255,255,.04); color:var(--text);
+      outline:none;
+    }
+    textarea{min-height:84px;resize:vertical}
+    .modalBack{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:16px}
+    .modal{max-width:560px;width:100%;background:rgba(15,23,42,.98);border:1px solid var(--border);border-radius:18px;overflow:hidden}
+    .modalHead{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+    .x{background:transparent;color:var(--muted);font-size:18px;width:auto;padding:6px 10px}
+    .msg{margin-top:10px;font-size:13px;color:var(--muted)}
+    .ok{color:#86efac}
+    .bad{color:#fca5a5}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>My Simple Shop</h1>
+        <div class="sub">เว็บร้านค้าแบบ MVP: โชว์สินค้า + รับออเดอร์เข้าชีต</div>
+      </div>
+      <div class="sub" id="status">กำลังโหลดสินค้า…</div>
+    </header>
+
+    <div class="grid" id="grid"></div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modalBack" id="modalBack">
+    <div class="modal">
+      <div class="modalHead">
+        <div>
+          <div class="name" id="mName">สั่งซื้อ</div>
+          <div class="sub" id="mPrice"></div>
+        </div>
+        <button class="x" id="btnClose">✕</button>
+      </div>
+      <div class="pad">
+        <div class="row">
+          <div>
+            <div class="sub">ชื่อผู้รับ</div>
+            <input id="fName" placeholder="เช่น รีวิว" />
+          </div>
+          <div>
+            <div class="sub">เบอร์โทร</div>
+            <input id="fPhone" placeholder="0xx-xxx-xxxx" />
+          </div>
+        </div>
+
+        <div style="height:10px"></div>
+
+        <div class="row">
+          <div>
+            <div class="sub">จำนวน</div>
+            <input id="fQty" type="number" min="1" value="1" />
+          </div>
+          <div>
+            <div class="sub">หมายเหตุ</div>
+            <input id="fNote" placeholder="สี/ไซส์/ทักแชท ฯลฯ" />
+          </div>
+        </div>
+
+        <div style="height:10px"></div>
+
+        <div>
+          <div class="sub">ที่อยู่จัดส่ง</div>
+          <textarea id="fAddress" placeholder="กรอกที่อยู่ให้ครบ"></textarea>
+        </div>
+
+        <div style="height:12px"></div>
+        <button id="btnSubmit">ยืนยันสั่งซื้อ</button>
+        <div class="msg" id="msg"></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // ✅ ใส่ลิงก์ Web App ของเธอตรงนี้
+  const API_URL = "https://script.google.com/macros/s/AKfycbwPExSc4fYjJlAwzHdf02CRrMiFjOMU9aPUy3wSDWhoAmV0roCxKXIyk9rh7SY8XL8EHg/exec";
+
+  const grid = document.getElementById("grid");
+  const statusEl = document.getElementById("status");
+
+  const modalBack = document.getElementById("modalBack");
+  const btnClose = document.getElementById("btnClose");
+  const btnSubmit = document.getElementById("btnSubmit");
+  const msgEl = document.getElementById("msg");
+
+  const mName = document.getElementById("mName");
+  const mPrice = document.getElementById("mPrice");
+  const fName = document.getElementById("fName");
+  const fPhone = document.getElementById("fPhone");
+  const fQty = document.getElementById("fQty");
+  const fAddress = document.getElementById("fAddress");
+  const fNote = document.getElementById("fNote");
+
+  let selected = null;
+
+  init();
+
+  async function init(){
+    try{
+      const url = API_URL + "?action=listProducts";
+      const res = await fetch(url);
+      const json = await res.json();
+      if(!json.ok) throw new Error(json.error || "โหลดสินค้าไม่สำเร็จ");
+
+      renderProducts(json.data || []);
+      statusEl.textContent = "พร้อมขาย ✅";
+    }catch(err){
+      statusEl.textContent = "โหลดไม่ได้ ❌";
+      grid.innerHTML = `<div class="sub">Error: ${escapeHtml(String(err))}</div>`;
+    }
+  }
+
+  function renderProducts(items){
+    if(!items.length){
+      grid.innerHTML = `<div class="sub">ยังไม่มีสินค้าใน PRODUCTS หรือยังไม่ active</div>`;
+      return;
+    }
+    grid.innerHTML = items.map(p => `
+      <div class="card">
+        <img class="img" src="${escapeAttr(p.img || '')}" onerror="this.style.display='none'" />
+        <div class="pad">
+          <div class="name">${escapeHtml(p.name)}</div>
+          <div class="price">฿${Number(p.price||0).toLocaleString()}</div>
+          <div style="height:10px"></div>
+          <button onclick='openBuy(${JSON.stringify(p)})'>สั่งซื้อ</button>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  window.openBuy = (p) => {
+    selected = p;
+    msgEl.textContent = "";
+    msgEl.className = "msg";
+
+    mName.textContent = "สั่งซื้อ: " + p.name;
+    mPrice.textContent = "ราคา: ฿" + Number(p.price||0).toLocaleString();
+
+    fQty.value = 1;
+    fNote.value = "";
+    modalBack.style.display = "flex";
+  };
+
+  btnClose.onclick = () => modalBack.style.display = "none";
+  modalBack.addEventListener("click", (e)=>{ if(e.target === modalBack) modalBack.style.display="none"; });
+
+  btnSubmit.onclick = async () => {
+    if(!selected) return;
+
+    const payload = {
+      action: "createOrder",
+      productId: selected.id,
+      qty: Number(fQty.value || 1),
+      customerName: fName.value.trim(),
+      phone: fPhone.value.trim(),
+      address: fAddress.value.trim(),
+      note: fNote.value.trim()
+    };
+
+    // basic validate
+    if(!payload.customerName || !payload.phone || !payload.address){
+      msgEl.textContent = "กรอกชื่อ/เบอร์/ที่อยู่ให้ครบก่อนนะ";
+      msgEl.className = "msg bad";
+      return;
+    }
+
+    btnSubmit.disabled = true;
+    msgEl.textContent = "กำลังบันทึกออเดอร์…";
+    msgEl.className = "msg";
+
+    try{
+      const res = await fetch(API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const json = await res.json();
+      if(!json.ok) throw new Error(json.error || "สั่งซื้อไม่สำเร็จ");
+
+      msgEl.textContent = `สำเร็จ ✅ เลขออเดอร์: ${json.data.orderId} | รวม ฿${Number(json.data.total).toLocaleString()}`;
+      msgEl.className = "msg ok";
+    }catch(err){
+      msgEl.textContent = "พังแล้ว ❌ " + String(err);
+      msgEl.className = "msg bad";
+    }finally{
+      btnSubmit.disabled = false;
+    }
+  };
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  }
+  function escapeAttr(s){ return escapeHtml(s).replace(/"/g,'&quot;'); }
+</script>
+</body>
+</html>
