@@ -4,42 +4,164 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>My Simple Shop</title>
+
   <style>
     :root{
-      --bg:#0b1220; --panel:rgba(255,255,255,.06); --border:rgba(255,255,255,.14);
-      --text:#e5e7eb; --muted:#9ca3af; --accent:#22c55e;
+      --bg:#f7f5ff;
+      --panel:#ffffff;
+      --border:#e9e3ff;
+      --text:#2b235a;
+      --muted:#8a7fc7;
+      --accent:#a78bfa;
+      --accent2:#f5d0fe;
     }
+
     *{box-sizing:border-box}
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto;color:var(--text);background:radial-gradient(1200px 600px at 20% -10%, rgba(34,197,94,.18), transparent 60%), var(--bg)}
+    body{
+      margin:0;
+      font-family: "Prompt", system-ui, -apple-system, Segoe UI, Roboto;
+      color:var(--text);
+      background:
+        radial-gradient(900px 400px at 10% -10%, #ede9fe, transparent 60%),
+        radial-gradient(900px 400px at 90% 10%, #fce7f3, transparent 60%),
+        var(--bg);
+    }
+
     .wrap{max-width:1100px;margin:0 auto;padding:24px}
-    header{display:flex;gap:14px;align-items:center;justify-content:space-between;margin-bottom:18px}
-    h1{font-size:20px;margin:0}
+
+    header{
+      display:flex;
+      gap:14px;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:22px
+    }
+
+    h1{
+      font-size:26px;
+      margin:0;
+      font-weight:700;
+      letter-spacing:.2px;
+    }
+
     .sub{color:var(--muted);font-size:13px}
-    .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:18px
+    }
     @media (max-width:980px){.grid{grid-template-columns:repeat(2,1fr)}}
     @media (max-width:520px){.grid{grid-template-columns:1fr}}
-    .card{background:var(--panel);border:1px solid var(--border);border-radius:16px;overflow:hidden}
-    .img{width:100%;height:180px;background:#111827;display:block;object-fit:cover}
-    .pad{padding:12px}
-    .name{font-weight:650}
-    .price{margin-top:6px;color:#bbf7d0}
-    button{cursor:pointer;border:0;border-radius:12px;padding:10px 12px;background:var(--accent);color:#052e14;font-weight:700;width:100%}
+
+    .card{
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:20px;
+      overflow:hidden;
+      box-shadow:0 10px 30px rgba(167,139,250,.12);
+      transition:.25s ease;
+    }
+    .card:hover{
+      transform:translateY(-4px);
+      box-shadow:0 18px 40px rgba(167,139,250,.18);
+    }
+
+    .img{
+      width:100%;
+      height:190px;
+      background:#f3f0ff;
+      display:block;
+      object-fit:cover
+    }
+
+    .pad{padding:14px}
+
+    .name{
+      font-weight:650;
+      font-size:16px;
+    }
+
+    .price{
+      margin-top:6px;
+      color:#7c3aed;
+      font-weight:600;
+    }
+
+    button{
+      cursor:pointer;
+      border:0;
+      border-radius:14px;
+      padding:12px 14px;
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
+      color:#3b0764;
+      font-weight:700;
+      width:100%;
+      box-shadow:0 8px 18px rgba(167,139,250,.35);
+      transition:.2s ease;
+    }
+    button:hover{
+      filter:brightness(1.05);
+      transform:translateY(-1px);
+    }
     button:disabled{opacity:.6;cursor:not-allowed}
+
     .row{display:flex;gap:10px}
     .row > *{flex:1}
+
     input, textarea{
-      width:100%; padding:10px 12px; border-radius:12px;
-      border:1px solid var(--border); background:rgba(255,255,255,.04); color:var(--text);
+      width:100%;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background:#faf9ff;
+      color:var(--text);
       outline:none;
     }
+
     textarea{min-height:84px;resize:vertical}
-    .modalBack{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;padding:16px}
-    .modal{max-width:560px;width:100%;background:rgba(15,23,42,.98);border:1px solid var(--border);border-radius:18px;overflow:hidden}
-    .modalHead{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
-    .x{background:transparent;color:var(--muted);font-size:18px;width:auto;padding:6px 10px}
+
+    .modalBack{
+      position:fixed;
+      inset:0;
+      background:rgba(120,90,200,.25);
+      backdrop-filter: blur(6px);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:16px
+    }
+
+    .modal{
+      max-width:560px;
+      width:100%;
+      background:#ffffff;
+      border:1px solid var(--border);
+      border-radius:22px;
+      overflow:hidden;
+      box-shadow:0 30px 60px rgba(120,90,200,.25);
+    }
+
+    .modalHead{
+      padding:14px 16px;
+      border-bottom:1px solid var(--border);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      background:linear-gradient(135deg,#ede9fe,#fce7f3);
+    }
+
+    .x{
+      background:transparent;
+      color:var(--muted);
+      font-size:18px;
+      width:auto;
+      padding:6px 10px
+    }
+
     .msg{margin-top:10px;font-size:13px;color:var(--muted)}
-    .ok{color:#86efac}
-    .bad{color:#fca5a5}
+    .ok{color:#16a34a}
+    .bad{color:#dc2626}
   </style>
 </head>
 <body>
@@ -47,7 +169,7 @@
     <header>
       <div>
         <h1>My Simple Shop</h1>
-        <div class="sub">เว็บร้านค้าแบบ MVP: โชว์สินค้า + รับออเดอร์เข้าชีต</div>
+        <div class="sub">เว็บร้านค้าแบบง่าย ขาว-ม่วงพาสเทล</div>
       </div>
       <div class="sub" id="status">กำลังโหลดสินค้า…</div>
     </header>
@@ -55,7 +177,6 @@
     <div class="grid" id="grid"></div>
   </div>
 
-  <!-- Modal -->
   <div class="modalBack" id="modalBack">
     <div class="modal">
       <div class="modalHead">
@@ -69,11 +190,11 @@
         <div class="row">
           <div>
             <div class="sub">ชื่อผู้รับ</div>
-            <input id="fName" placeholder="เช่น รีวิว" />
+            <input id="fName" />
           </div>
           <div>
             <div class="sub">เบอร์โทร</div>
-            <input id="fPhone" placeholder="0xx-xxx-xxxx" />
+            <input id="fPhone" />
           </div>
         </div>
 
@@ -86,7 +207,7 @@
           </div>
           <div>
             <div class="sub">หมายเหตุ</div>
-            <input id="fNote" placeholder="สี/ไซส์/ทักแชท ฯลฯ" />
+            <input id="fNote" />
           </div>
         </div>
 
@@ -94,7 +215,7 @@
 
         <div>
           <div class="sub">ที่อยู่จัดส่ง</div>
-          <textarea id="fAddress" placeholder="กรอกที่อยู่ให้ครบ"></textarea>
+          <textarea id="fAddress"></textarea>
         </div>
 
         <div style="height:12px"></div>
@@ -105,7 +226,6 @@
   </div>
 
 <script>
-  // ✅ ใส่ลิงก์ Web App ของเธอตรงนี้
   const API_URL = "https://script.google.com/macros/s/AKfycbwPExSc4fYjJlAwzHdf02CRrMiFjOMU9aPUy3wSDWhoAmV0roCxKXIyk9rh7SY8XL8EHg/exec";
 
   const grid = document.getElementById("grid");
@@ -136,23 +256,23 @@
       if(!json.ok) throw new Error(json.error || "โหลดสินค้าไม่สำเร็จ");
 
       renderProducts(json.data || []);
-      statusEl.textContent = "พร้อมขาย ✅";
+      statusEl.textContent = "พร้อมขายแล้ว 💜";
     }catch(err){
       statusEl.textContent = "โหลดไม่ได้ ❌";
-      grid.innerHTML = `<div class="sub">Error: ${escapeHtml(String(err))}</div>`;
+      grid.innerHTML = `<div class="sub">Error: ${String(err)}</div>`;
     }
   }
 
   function renderProducts(items){
     if(!items.length){
-      grid.innerHTML = `<div class="sub">ยังไม่มีสินค้าใน PRODUCTS หรือยังไม่ active</div>`;
+      grid.innerHTML = `<div class="sub">ยังไม่มีสินค้า</div>`;
       return;
     }
     grid.innerHTML = items.map(p => `
       <div class="card">
-        <img class="img" src="${escapeAttr(p.img || '')}" onerror="this.style.display='none'" />
+        <img class="img" src="${p.img || ''}" onerror="this.style.display='none'" />
         <div class="pad">
-          <div class="name">${escapeHtml(p.name)}</div>
+          <div class="name">${p.name}</div>
           <div class="price">฿${Number(p.price||0).toLocaleString()}</div>
           <div style="height:10px"></div>
           <button onclick='openBuy(${JSON.stringify(p)})'>สั่งซื้อ</button>
@@ -164,66 +284,52 @@
   window.openBuy = (p) => {
     selected = p;
     msgEl.textContent = "";
-    msgEl.className = "msg";
-
     mName.textContent = "สั่งซื้อ: " + p.name;
     mPrice.textContent = "ราคา: ฿" + Number(p.price||0).toLocaleString();
-
-    fQty.value = 1;
-    fNote.value = "";
     modalBack.style.display = "flex";
   };
 
   btnClose.onclick = () => modalBack.style.display = "none";
-  modalBack.addEventListener("click", (e)=>{ if(e.target === modalBack) modalBack.style.display="none"; });
+  modalBack.onclick = e => { if(e.target===modalBack) modalBack.style.display="none"; };
 
   btnSubmit.onclick = async () => {
     if(!selected) return;
-
     const payload = {
       action: "createOrder",
       productId: selected.id,
-      qty: Number(fQty.value || 1),
-      customerName: fName.value.trim(),
-      phone: fPhone.value.trim(),
-      address: fAddress.value.trim(),
-      note: fNote.value.trim()
+      qty: Number(fQty.value||1),
+      customerName: fName.value,
+      phone: fPhone.value,
+      address: fAddress.value,
+      note: fNote.value
     };
 
-    // basic validate
     if(!payload.customerName || !payload.phone || !payload.address){
-      msgEl.textContent = "กรอกชื่อ/เบอร์/ที่อยู่ให้ครบก่อนนะ";
+      msgEl.textContent = "กรอกข้อมูลให้ครบ";
       msgEl.className = "msg bad";
       return;
     }
 
     btnSubmit.disabled = true;
-    msgEl.textContent = "กำลังบันทึกออเดอร์…";
-    msgEl.className = "msg";
+    msgEl.textContent = "กำลังบันทึก…";
 
     try{
       const res = await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
         body: JSON.stringify(payload)
       });
       const json = await res.json();
-      if(!json.ok) throw new Error(json.error || "สั่งซื้อไม่สำเร็จ");
-
-      msgEl.textContent = `สำเร็จ ✅ เลขออเดอร์: ${json.data.orderId} | รวม ฿${Number(json.data.total).toLocaleString()}`;
+      if(!json.ok) throw new Error(json.error);
+      msgEl.textContent = "สำเร็จ! เลขออเดอร์ " + json.data.orderId;
       msgEl.className = "msg ok";
     }catch(err){
-      msgEl.textContent = "พังแล้ว ❌ " + String(err);
+      msgEl.textContent = "พลาด: " + err;
       msgEl.className = "msg bad";
     }finally{
       btnSubmit.disabled = false;
     }
   };
-
-  function escapeHtml(s){
-    return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-  }
-  function escapeAttr(s){ return escapeHtml(s).replace(/"/g,'&quot;'); }
 </script>
 </body>
 </html>
