@@ -7,229 +7,528 @@
 
   <style>
     :root{
-      --bg:#f7f5ff;
+      --bg:#fbfaff;
       --panel:#ffffff;
-      --border:#e9e3ff;
-      --text:#2b235a;
-      --muted:#8a7fc7;
+      --panel2:#fff7ff;
+      --border:#eadfff;
+      --text:#241c4c;
+      --muted:#7a70b7;
       --accent:#a78bfa;
       --accent2:#f5d0fe;
+      --accent3:#c4b5fd;
+      --ok:#16a34a;
+      --bad:#dc2626;
+      --shadow: 0 18px 50px rgba(118, 90, 210, .14);
+      --shadow2: 0 10px 25px rgba(118, 90, 210, .12);
+      --radius: 22px;
     }
 
-    *{box-sizing:border-box}
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
     body{
       margin:0;
-      font-family: "Prompt", system-ui, -apple-system, Segoe UI, Roboto;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Prompt";
       color:var(--text);
       background:
-        radial-gradient(900px 400px at 10% -10%, #ede9fe, transparent 60%),
-        radial-gradient(900px 400px at 90% 10%, #fce7f3, transparent 60%),
+        radial-gradient(900px 420px at 8% -10%, rgba(167,139,250,.35), transparent 62%),
+        radial-gradient(900px 420px at 92% 8%, rgba(245,208,254,.45), transparent 60%),
+        radial-gradient(1100px 500px at 50% 110%, rgba(196,181,253,.35), transparent 65%),
         var(--bg);
     }
 
-    .wrap{max-width:1100px;margin:0 auto;padding:24px}
+    a{ color:inherit; text-decoration:none; }
+    .wrap{ max-width:1120px; margin:0 auto; padding:22px; }
 
-    header{
-      display:flex;
-      gap:14px;
-      align-items:center;
-      justify-content:space-between;
-      margin-bottom:22px
+    /* Topbar */
+    .topbar{
+      position:sticky; top:0; z-index:20;
+      backdrop-filter: blur(10px);
+      background: rgba(251,250,255,.72);
+      border-bottom: 1px solid rgba(234,223,255,.75);
     }
-
-    h1{
-      font-size:26px;
-      margin:0;
-      font-weight:700;
-      letter-spacing:.2px;
+    .topbar .inner{
+      max-width:1120px; margin:0 auto; padding:14px 22px;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
     }
-
-    .sub{color:var(--muted);font-size:13px}
-
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:18px
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      font-weight:800; letter-spacing:.2px;
     }
-    @media (max-width:980px){.grid{grid-template-columns:repeat(2,1fr)}}
-    @media (max-width:520px){.grid{grid-template-columns:1fr}}
+    .logo{
+      width:38px; height:38px; border-radius:14px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      box-shadow: 0 10px 20px rgba(167,139,250,.25);
+      display:grid; place-items:center;
+      color:#3b0764;
+      font-weight:900;
+      user-select:none;
+    }
+    .brand .meta{
+      display:flex; flex-direction:column; line-height:1.15;
+    }
+    .brand .meta .name{ font-size:16px; }
+    .brand .meta .sub{ font-size:12px; color:var(--muted); font-weight:600; }
 
-    .card{
-      background:var(--panel);
+    .right{
+      display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    }
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
       border:1px solid var(--border);
-      border-radius:20px;
+      background: rgba(255,255,255,.85);
+      box-shadow: 0 10px 20px rgba(118,90,210,.08);
+      font-size:12px;
+      color:var(--muted);
+      font-weight:700;
+      white-space:nowrap;
+    }
+    .dot{
+      width:10px; height:10px; border-radius:99px;
+      background: #d1d5db;
+      box-shadow: 0 0 0 4px rgba(209,213,219,.25);
+    }
+    .dot.ok{
+      background: #34d399;
+      box-shadow: 0 0 0 4px rgba(52,211,153,.18);
+    }
+
+    /* Hero */
+    .hero{
+      margin-top:18px;
+      background: linear-gradient(135deg, rgba(167,139,250,.22), rgba(245,208,254,.28));
+      border: 1px solid rgba(234,223,255,.95);
+      border-radius: 28px;
+      padding:22px;
+      box-shadow: var(--shadow);
+      position:relative;
       overflow:hidden;
-      box-shadow:0 10px 30px rgba(167,139,250,.12);
-      transition:.25s ease;
     }
-    .card:hover{
-      transform:translateY(-4px);
-      box-shadow:0 18px 40px rgba(167,139,250,.18);
+    .hero:before{
+      content:"";
+      position:absolute; inset:-80px -80px auto auto;
+      width:240px; height:240px;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.85), rgba(255,255,255,0));
+      transform: rotate(15deg);
+      pointer-events:none;
     }
-
-    .img{
-      width:100%;
-      height:190px;
-      background:#f3f0ff;
-      display:block;
-      object-fit:cover
+    .heroGrid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:18px;
+      align-items:center;
     }
-
-    .pad{padding:14px}
-
-    .name{
-      font-weight:650;
-      font-size:16px;
+    @media (max-width:900px){
+      .heroGrid{ grid-template-columns: 1fr; }
     }
-
-    .price{
-      margin-top:6px;
-      color:#7c3aed;
+    .hero h1{
+      margin:0;
+      font-size:34px;
+      letter-spacing:.2px;
+      line-height:1.1;
+    }
+    .hero p{
+      margin:10px 0 0;
+      color: rgba(36,28,76,.78);
       font-weight:600;
     }
-
-    button{
+    .heroActions{
+      margin-top:14px;
+      display:flex; gap:10px; flex-wrap:wrap;
+    }
+    .btn{
       cursor:pointer;
       border:0;
-      border-radius:14px;
+      border-radius: 16px;
       padding:12px 14px;
-      background:linear-gradient(135deg,var(--accent),var(--accent2));
-      color:#3b0764;
-      font-weight:700;
-      width:100%;
-      box-shadow:0 8px 18px rgba(167,139,250,.35);
+      font-weight:800;
+      box-shadow: 0 12px 26px rgba(118,90,210,.18);
       transition:.2s ease;
+      display:inline-flex; align-items:center; gap:10px;
     }
-    button:hover{
-      filter:brightness(1.05);
-      transform:translateY(-1px);
+    .btnPrimary{
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color:#3b0764;
     }
-    button:disabled{opacity:.6;cursor:not-allowed}
+    .btnGhost{
+      background: rgba(255,255,255,.75);
+      border: 1px solid rgba(234,223,255,.95);
+      color: var(--text);
+      box-shadow: 0 12px 26px rgba(118,90,210,.10);
+    }
+    .btn:hover{ transform: translateY(-1px); filter: brightness(1.02); }
 
-    .row{display:flex;gap:10px}
-    .row > *{flex:1}
+    .heroCard{
+      background: rgba(255,255,255,.78);
+      border:1px solid rgba(234,223,255,.95);
+      border-radius: 22px;
+      padding:14px;
+      box-shadow: var(--shadow2);
+    }
+    .heroCard .row{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      padding:10px 10px;
+      border-radius:16px;
+      background: rgba(255,255,255,.65);
+      border:1px dashed rgba(167,139,250,.35);
+    }
+    .heroCard .k{ font-size:12px; color:var(--muted); font-weight:800; }
+    .heroCard .v{ font-size:13px; font-weight:900; }
+    .heroCard .hint{
+      margin-top:10px;
+      font-size:12px;
+      color: var(--muted);
+      font-weight:700;
+    }
 
-    input, textarea{
+    /* Section heading */
+    .sectionHead{
+      margin-top:20px;
+      display:flex; align-items:flex-end; justify-content:space-between; gap:12px;
+      padding:0 4px;
+    }
+    .sectionHead .title{
+      font-size:18px; font-weight:900;
+    }
+    .sectionHead .desc{
+      color:var(--muted); font-size:12px; font-weight:700;
+    }
+
+    /* Grid */
+    .grid{
+      margin-top:12px;
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap:18px;
+      align-items:stretch;
+    }
+    @media (max-width:980px){ .grid{ grid-template-columns: repeat(2,1fr);} }
+    @media (max-width:560px){ .grid{ grid-template-columns: 1fr; } }
+
+    /* Card */
+    .card{
+      background: rgba(255,255,255,.85);
+      border:1px solid rgba(234,223,255,.95);
+      border-radius: var(--radius);
+      overflow:hidden;
+      box-shadow: var(--shadow2);
+      transition:.25s ease;
+      display:flex; flex-direction:column;
+      min-height: 320px;
+    }
+    .card:hover{
+      transform: translateY(-4px);
+      box-shadow: var(--shadow);
+    }
+    .thumb{
+      height:190px;
+      background: linear-gradient(135deg, rgba(167,139,250,.22), rgba(245,208,254,.35));
+      position:relative;
+      display:grid; place-items:center;
+      overflow:hidden;
+    }
+    .thumb img{
       width:100%;
-      padding:10px 12px;
-      border-radius:14px;
-      border:1px solid var(--border);
-      background:#faf9ff;
-      color:var(--text);
-      outline:none;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+    .thumb .ph{
+      font-weight:900;
+      color:#4c1d95;
+      opacity:.8;
+      user-select:none;
+    }
+    .pad{ padding:14px; display:flex; flex-direction:column; gap:10px; flex:1; }
+    .name{ font-size:16px; font-weight:900; }
+    .priceLine{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+    }
+    .price{
+      font-weight:950;
+      color:#6d28d9;
+      font-size:16px;
+    }
+    .badge{
+      font-size:11px;
+      font-weight:900;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(167,139,250,.35);
+      background: rgba(255,255,255,.75);
+      color: #5b21b6;
     }
 
-    textarea{min-height:84px;resize:vertical}
+    .buyBtn{
+      margin-top:auto;
+      cursor:pointer;
+      border:0;
+      border-radius:16px;
+      padding:12px 14px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color:#3b0764;
+      font-weight:950;
+      box-shadow: 0 12px 26px rgba(167,139,250,.25);
+      transition:.2s ease;
+      width:100%;
+    }
+    .buyBtn:hover{ transform: translateY(-1px); filter: brightness(1.03); }
+    .buyBtn:disabled{ opacity:.6; cursor:not-allowed; }
 
+    /* Skeleton */
+    .skel{
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.75);
+      border:1px solid rgba(234,223,255,.95);
+      overflow:hidden;
+      box-shadow: var(--shadow2);
+    }
+    .skel .bar{
+      height:12px; margin:12px 14px; border-radius:999px;
+      background: linear-gradient(90deg, rgba(167,139,250,.18), rgba(245,208,254,.28), rgba(167,139,250,.18));
+      background-size: 200% 100%;
+      animation: shimmer 1.2s linear infinite;
+    }
+    .skel .img{
+      height:190px;
+      background: linear-gradient(90deg, rgba(167,139,250,.18), rgba(245,208,254,.28), rgba(167,139,250,.18));
+      background-size: 200% 100%;
+      animation: shimmer 1.2s linear infinite;
+    }
+    @keyframes shimmer{
+      0%{ background-position: 0% 50%; }
+      100%{ background-position: 200% 50%; }
+    }
+
+    /* Modal */
     .modalBack{
       position:fixed;
       inset:0;
-      background:rgba(120,90,200,.25);
-      backdrop-filter: blur(6px);
+      background: rgba(74, 47, 158, .22);
+      backdrop-filter: blur(10px);
       display:none;
       align-items:center;
       justify-content:center;
-      padding:16px
+      padding:16px;
+      z-index:50;
     }
-
     .modal{
-      max-width:560px;
       width:100%;
-      background:#ffffff;
-      border:1px solid var(--border);
-      border-radius:22px;
+      max-width:620px;
+      background: rgba(255,255,255,.92);
+      border: 1px solid rgba(234,223,255,.95);
+      border-radius: 26px;
       overflow:hidden;
-      box-shadow:0 30px 60px rgba(120,90,200,.25);
+      box-shadow: 0 40px 80px rgba(74, 47, 158, .22);
     }
-
     .modalHead{
-      padding:14px 16px;
-      border-bottom:1px solid var(--border);
+      padding:16px 18px;
       display:flex;
+      align-items:flex-start;
       justify-content:space-between;
-      align-items:center;
-      background:linear-gradient(135deg,#ede9fe,#fce7f3);
+      gap:10px;
+      background: linear-gradient(135deg, rgba(167,139,250,.25), rgba(245,208,254,.35));
+      border-bottom: 1px solid rgba(234,223,255,.95);
     }
-
+    .modalTitle{
+      display:flex; flex-direction:column; gap:4px;
+    }
+    .modalTitle .t{
+      font-size:16px; font-weight:950;
+    }
+    .modalTitle .p{
+      font-size:12px; color:var(--muted); font-weight:800;
+    }
     .x{
-      background:transparent;
-      color:var(--muted);
-      font-size:18px;
-      width:auto;
-      padding:6px 10px
+      background: rgba(255,255,255,.75);
+      border:1px solid rgba(234,223,255,.95);
+      border-radius: 14px;
+      padding:8px 10px;
+      cursor:pointer;
+      font-weight:900;
+      color: var(--muted);
+      transition:.2s ease;
     }
+    .x:hover{ transform: translateY(-1px); }
 
-    .msg{margin-top:10px;font-size:13px;color:var(--muted)}
-    .ok{color:#16a34a}
-    .bad{color:#dc2626}
+    .modalBody{ padding:16px 18px 18px; }
+    .formGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+    }
+    @media (max-width:640px){
+      .formGrid{ grid-template-columns: 1fr; }
+    }
+    .field .label{
+      font-size:12px;
+      color:var(--muted);
+      font-weight:900;
+      margin:0 0 6px 2px;
+    }
+    input, textarea{
+      width:100%;
+      padding:12px 12px;
+      border-radius:16px;
+      border:1px solid rgba(234,223,255,.95);
+      background:#ffffff;
+      color:var(--text);
+      outline:none;
+      font-weight:700;
+      box-shadow: 0 10px 20px rgba(118,90,210,.06);
+    }
+    textarea{ min-height:96px; resize:vertical; }
+
+    .actions{
+      margin-top:12px;
+      display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap;
+    }
+    .small{
+      font-size:12px; color:var(--muted); font-weight:800;
+    }
+    .msg{ margin-top:10px; font-size:13px; font-weight:800; color:var(--muted); }
+    .msg.ok{ color: var(--ok); }
+    .msg.bad{ color: var(--bad); }
+
+    footer{
+      margin:22px 0 10px;
+      padding:14px 6px;
+      color: var(--muted);
+      font-size:12px;
+      font-weight:700;
+      text-align:center;
+    }
   </style>
 </head>
-<body>
-  <div class="wrap">
-    <header>
-      <div>
-        <h1>My Simple Shop</h1>
-        <div class="sub">เว็บร้านค้าแบบง่าย ขาว-ม่วงพาสเทล</div>
-      </div>
-      <div class="sub" id="status">กำลังโหลดสินค้า…</div>
-    </header>
 
-    <div class="grid" id="grid"></div>
+<body>
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="inner">
+      <div class="brand">
+        <div class="logo">S</div>
+        <div class="meta">
+          <div class="name">My Simple Shop</div>
+          <div class="sub">ร้านออนไลน์ขาว–ม่วงพาสเทล</div>
+        </div>
+      </div>
+
+      <div class="right">
+        <div class="pill">
+          <span class="dot" id="dot"></span>
+          <span id="status">กำลังโหลดสินค้า…</span>
+        </div>
+      </div>
+    </div>
   </div>
 
+  <div class="wrap">
+    <!-- Hero -->
+    <section class="hero">
+      <div class="heroGrid">
+        <div>
+          <h1>ช้อปปิ้งง่าย ๆ <br/>สวยแบบพาสเทล 💜</h1>
+          <p>ดูสินค้า → กดสั่งซื้อ → ระบบบันทึกออเดอร์เข้าชีตทันที (เหมาะกับร้านเริ่มต้น)</p>
+
+          <div class="heroActions">
+            <button class="btn btnPrimary" onclick="scrollToProducts()">
+              🛍️ ดูสินค้า
+            </button>
+            <button class="btn btnGhost" onclick="openHelp()">
+              💬 วิธีสั่งซื้อ
+            </button>
+          </div>
+        </div>
+
+        <div class="heroCard">
+          <div class="row">
+            <div>
+              <div class="k">ระบบหลังบ้าน</div>
+              <div class="v">Google Sheet</div>
+            </div>
+            <div class="badge">MVP → ร้านจริง</div>
+          </div>
+          <div class="hint">
+            ทิป: ใส่รูปสินค้าในคอลัมน์ <b>img</b> (ลิงก์รูป) จะดูเป็นร้านจริงขึ้น x10
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Products -->
+    <div class="sectionHead" id="products">
+      <div>
+        <div class="title">สินค้าทั้งหมด</div>
+        <div class="desc">เลือกสินค้าแล้วกด “สั่งซื้อ” ได้เลย</div>
+      </div>
+      <div class="desc" id="count"></div>
+    </div>
+
+    <div class="grid" id="grid">
+      <!-- skeleton default -->
+    </div>
+
+    <footer>© <span id="year"></span> My Simple Shop • ทำด้วยความพยายามและกาแฟ 1 แก้ว</footer>
+  </div>
+
+  <!-- Modal -->
   <div class="modalBack" id="modalBack">
     <div class="modal">
       <div class="modalHead">
-        <div>
-          <div class="name" id="mName">สั่งซื้อ</div>
-          <div class="sub" id="mPrice"></div>
+        <div class="modalTitle">
+          <div class="t" id="mName">สั่งซื้อ</div>
+          <div class="p" id="mPrice"></div>
         </div>
-        <button class="x" id="btnClose">✕</button>
+        <button class="x" id="btnClose" aria-label="close">✕</button>
       </div>
-      <div class="pad">
-        <div class="row">
-          <div>
-            <div class="sub">ชื่อผู้รับ</div>
-            <input id="fName" />
-          </div>
-          <div>
-            <div class="sub">เบอร์โทร</div>
-            <input id="fPhone" />
-          </div>
-        </div>
 
-        <div style="height:10px"></div>
+      <div class="modalBody">
+        <div class="formGrid">
+          <div class="field">
+            <div class="label">ชื่อผู้รับ</div>
+            <input id="fName" placeholder="เช่น รีวิว" />
+          </div>
+          <div class="field">
+            <div class="label">เบอร์โทร</div>
+            <input id="fPhone" placeholder="0xx-xxx-xxxx" />
+          </div>
 
-        <div class="row">
-          <div>
-            <div class="sub">จำนวน</div>
+          <div class="field">
+            <div class="label">จำนวน</div>
             <input id="fQty" type="number" min="1" value="1" />
           </div>
-          <div>
-            <div class="sub">หมายเหตุ</div>
-            <input id="fNote" />
+          <div class="field">
+            <div class="label">หมายเหตุ (สี/ไซส์ ฯลฯ)</div>
+            <input id="fNote" placeholder="ถ้ามี" />
+          </div>
+
+          <div class="field" style="grid-column:1 / -1">
+            <div class="label">ที่อยู่จัดส่ง</div>
+            <textarea id="fAddress" placeholder="กรอกที่อยู่ให้ครบ"></textarea>
           </div>
         </div>
 
-        <div style="height:10px"></div>
-
-        <div>
-          <div class="sub">ที่อยู่จัดส่ง</div>
-          <textarea id="fAddress"></textarea>
+        <div class="actions">
+          <div class="small" id="summary"></div>
+          <button class="btn btnPrimary" id="btnSubmit" style="min-width:180px;">
+            ✅ ยืนยันสั่งซื้อ
+          </button>
         </div>
 
-        <div style="height:12px"></div>
-        <button id="btnSubmit">ยืนยันสั่งซื้อ</button>
         <div class="msg" id="msg"></div>
       </div>
     </div>
   </div>
 
 <script>
+  // ✅ ใส่ลิงก์ Web App (/exec) ของ Google Apps Script ตรงนี้
   const API_URL = "https://script.google.com/macros/s/AKfycbwPExSc4fYjJlAwzHdf02CRrMiFjOMU9aPUy3wSDWhoAmV0roCxKXIyk9rh7SY8XL8EHg/exec";
 
   const grid = document.getElementById("grid");
   const statusEl = document.getElementById("status");
+  const dotEl = document.getElementById("dot");
+  const countEl = document.getElementById("count");
 
   const modalBack = document.getElementById("modalBack");
   const btnClose = document.getElementById("btnClose");
@@ -238,98 +537,188 @@
 
   const mName = document.getElementById("mName");
   const mPrice = document.getElementById("mPrice");
+  const summaryEl = document.getElementById("summary");
+
   const fName = document.getElementById("fName");
   const fPhone = document.getElementById("fPhone");
   const fQty = document.getElementById("fQty");
   const fAddress = document.getElementById("fAddress");
   const fNote = document.getElementById("fNote");
 
+  document.getElementById("year").textContent = new Date().getFullYear();
+
   let selected = null;
 
+  renderSkeleton(8);
   init();
+
+  function scrollToProducts(){
+    document.getElementById("products").scrollIntoView({ behavior:"smooth", block:"start" });
+  }
+
+  function openHelp(){
+    alert("วิธีสั่งซื้อ:\\n1) เลือกสินค้าแล้วกดสั่งซื้อ\\n2) กรอกชื่อ/เบอร์/ที่อยู่\\n3) กดยืนยัน ระบบจะออกเลขออเดอร์ให้\\n(หลังบ้านไปดูที่ Google Sheet: ORDERS)");
+  }
 
   async function init(){
     try{
+      if(!API_URL || API_URL.includes("PUT_YOUR_WEB_APP_URL_HERE")){
+        throw new Error("ยังไม่ได้ใส่ API_URL (ลิงก์ /exec ของ Apps Script)");
+      }
+
       const url = API_URL + "?action=listProducts";
       const res = await fetch(url);
       const json = await res.json();
+
       if(!json.ok) throw new Error(json.error || "โหลดสินค้าไม่สำเร็จ");
 
-      renderProducts(json.data || []);
+      const items = json.data || [];
+      renderProducts(items);
+
       statusEl.textContent = "พร้อมขายแล้ว 💜";
+      dotEl.classList.add("ok");
     }catch(err){
-      statusEl.textContent = "โหลดไม่ได้ ❌";
-      grid.innerHTML = `<div class="sub">Error: ${String(err)}</div>`;
+      statusEl.textContent = "มีปัญหาในการโหลด";
+      dotEl.classList.remove("ok");
+      grid.innerHTML = `<div class="pill" style="grid-column:1/-1;justify-content:center;">
+        ❌ ${escapeHtml(String(err))}
+      </div>`;
     }
   }
 
-  function renderProducts(items){
-    if(!items.length){
-      grid.innerHTML = `<div class="sub">ยังไม่มีสินค้า</div>`;
-      return;
-    }
-    grid.innerHTML = items.map(p => `
-      <div class="card">
-        <img class="img" src="${p.img || ''}" onerror="this.style.display='none'" />
-        <div class="pad">
-          <div class="name">${p.name}</div>
-          <div class="price">฿${Number(p.price||0).toLocaleString()}</div>
-          <div style="height:10px"></div>
-          <button onclick='openBuy(${JSON.stringify(p)})'>สั่งซื้อ</button>
-        </div>
+  function renderSkeleton(n){
+    grid.innerHTML = Array.from({length:n}).map(() => `
+      <div class="skel">
+        <div class="img"></div>
+        <div class="bar" style="width:70%"></div>
+        <div class="bar" style="width:45%"></div>
+        <div class="bar" style="width:85%; height:40px; border-radius:16px"></div>
       </div>
     `).join("");
   }
 
+  function renderProducts(items){
+    countEl.textContent = items.length ? `${items.length} รายการ` : "";
+    if(!items.length){
+      grid.innerHTML = `<div class="pill" style="grid-column:1/-1;justify-content:center;">
+        ยังไม่มีสินค้าในระบบ (ไปเพิ่มในชีต PRODUCTS แล้วตั้ง status = active)
+      </div>`;
+      return;
+    }
+
+    grid.innerHTML = items.map(p => {
+      const safe = {
+        id: String(p.id||""),
+        name: String(p.name||""),
+        price: Number(p.price||0),
+        img: String(p.img||"")
+      };
+
+      const hasImg = !!safe.img;
+      return `
+        <div class="card">
+          <div class="thumb">
+            ${hasImg ? `<img src="${escapeAttr(safe.img)}" alt="${escapeAttr(safe.name)}" onerror="this.remove(); this.parentElement.querySelector('.ph').style.display='block';" />` : ``}
+            <div class="ph" style="display:${hasImg ? "none" : "block"};">ไม่มีรูปสินค้า</div>
+          </div>
+
+          <div class="pad">
+            <div class="name">${escapeHtml(safe.name)}</div>
+
+            <div class="priceLine">
+              <div class="price">฿${safe.price.toLocaleString()}</div>
+              <div class="badge">พร้อมส่ง</div>
+            </div>
+
+            <button class="buyBtn" onclick='openBuy(${JSON.stringify(safe)})'>
+              🛒 สั่งซื้อเลย
+            </button>
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+
   window.openBuy = (p) => {
     selected = p;
+
     msgEl.textContent = "";
+    msgEl.className = "msg";
+
     mName.textContent = "สั่งซื้อ: " + p.name;
     mPrice.textContent = "ราคา: ฿" + Number(p.price||0).toLocaleString();
+
+    fQty.value = 1;
+    fNote.value = "";
+    summaryEl.textContent = `รวมโดยประมาณ: ฿${Number(p.price||0).toLocaleString()}`;
+
     modalBack.style.display = "flex";
+    setTimeout(()=>fName.focus(), 50);
   };
 
   btnClose.onclick = () => modalBack.style.display = "none";
-  modalBack.onclick = e => { if(e.target===modalBack) modalBack.style.display="none"; };
+  modalBack.addEventListener("click", (e)=>{ if(e.target === modalBack) modalBack.style.display="none"; });
+
+  fQty.addEventListener("input", ()=>{
+    if(!selected) return;
+    const qty = Math.max(1, Number(fQty.value||1));
+    const total = Number(selected.price||0) * qty;
+    summaryEl.textContent = `รวมโดยประมาณ: ฿${total.toLocaleString()}`;
+  });
 
   btnSubmit.onclick = async () => {
     if(!selected) return;
+
+    const qty = Math.max(1, Number(fQty.value || 1));
     const payload = {
       action: "createOrder",
-      productId: selected.id,
-      qty: Number(fQty.value||1),
-      customerName: fName.value,
-      phone: fPhone.value,
-      address: fAddress.value,
-      note: fNote.value
+      productId: String(selected.id).trim(),
+      qty,
+      customerName: fName.value.trim(),
+      phone: fPhone.value.trim(),
+      address: fAddress.value.trim(),
+      note: fNote.value.trim()
     };
 
     if(!payload.customerName || !payload.phone || !payload.address){
-      msgEl.textContent = "กรอกข้อมูลให้ครบ";
+      msgEl.textContent = "กรอกชื่อ/เบอร์/ที่อยู่ให้ครบก่อนนะ";
       msgEl.className = "msg bad";
       return;
     }
 
     btnSubmit.disabled = true;
-    msgEl.textContent = "กำลังบันทึก…";
+    msgEl.textContent = "กำลังบันทึกออเดอร์…";
+    msgEl.className = "msg";
 
     try{
       const res = await fetch(API_URL, {
-        method:"POST",
-        headers:{ "Content-Type":"application/json" },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
       });
       const json = await res.json();
-      if(!json.ok) throw new Error(json.error);
-      msgEl.textContent = "สำเร็จ! เลขออเดอร์ " + json.data.orderId;
+      if(!json.ok) throw new Error(json.error || "สั่งซื้อไม่สำเร็จ");
+
+      const total = Number(json.data.total || 0);
+      msgEl.textContent = `สำเร็จ ✅ เลขออเดอร์: ${json.data.orderId} | รวม ฿${total.toLocaleString()}`;
       msgEl.className = "msg ok";
+
+      // optional: auto close after a bit
+      // setTimeout(()=> modalBack.style.display="none", 2000);
     }catch(err){
-      msgEl.textContent = "พลาด: " + err;
+      msgEl.textContent = "พังแล้ว ❌ " + String(err);
       msgEl.className = "msg bad";
     }finally{
       btnSubmit.disabled = false;
     }
   };
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, m => ({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[m]));
+  }
+  function escapeAttr(s){ return escapeHtml(s).replace(/"/g,'&quot;'); }
 </script>
 </body>
 </html>
