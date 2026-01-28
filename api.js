@@ -11,6 +11,12 @@ async function readJson(res) {
     throw new Error("API ไม่ได้ส่ง JSON กลับมา");
   }
 }
+const res = await fetch(API_URL, {
+  method: "POST",
+  headers: { "Content-Type": "text/plain;charset=utf-8" },
+  body: JSON.stringify(payload)
+});
+
 
 export async function listProducts() {
   if (!API_URL || !API_URL.includes("/exec")) throw new Error("API_URL ไม่ถูกต้อง");
