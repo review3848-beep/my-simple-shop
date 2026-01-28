@@ -11,17 +11,13 @@ async function readJson(res) {
     throw new Error("API ไม่ได้ส่ง JSON กลับมา");
   }
 }
-const res = await fetch(API_URL, {
-  method: "POST",
-  headers: { "Content-Type": "text/plain;charset=utf-8" },
-  body: JSON.stringify(payload)
-});
-
 
 export async function listProducts() {
   if (!API_URL || !API_URL.includes("/exec")) throw new Error("API_URL ไม่ถูกต้อง");
+
   const res = await fetch(`${API_URL}?action=listProducts`, { method: "GET" });
   const json = await readJson(res);
+
   if (!json.ok) throw new Error(json.error || "โหลดสินค้าไม่สำเร็จ");
   return json.data || [];
 }
@@ -39,9 +35,10 @@ export async function createOrder(payload) {
     note: String(payload.note || "").trim(),
   };
 
+  // ✅ สำคัญ: ส่งเป็น text/plain เพื่อหลบ CORS preflight
   const res = await fetch(API_URL, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
     body: JSON.stringify(body),
   });
 
