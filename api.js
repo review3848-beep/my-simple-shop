@@ -1,7 +1,7 @@
 // api.js — Simple Shop API client (Google Apps Script Web App)
 
 export const API_URL =
-  "https://script.google.com/macros/s/AKfycbwPExSc4fYjJlAwzHdf02CRrMiFjOMU9aPUy3wSDWhoAmV0roCxKXIyk9rh7SY8XL8EHg/exec";
+  "https://script.google.com/macros/s/AKfycbxAnD0CO6YXn9QPb1vAyCLbzXUwcif9NJLx8B1gu_10Xd0wCRmyYZyA0IIj57hX9_v4NQ/exec";
 
 async function readJson(res) {
   const text = await res.text();
@@ -35,7 +35,7 @@ export async function createOrder(payload) {
     note: String(payload.note || "").trim(),
   };
 
-  // ✅ สำคัญ: ส่งเป็น text/plain เพื่อหลบ CORS preflight
+  // ✅ สำคัญมาก: ส่ง text/plain เพื่อกัน CORS preflight
   const res = await fetch(API_URL, {
     method: "POST",
     headers: { "Content-Type": "text/plain;charset=utf-8" },
@@ -45,4 +45,20 @@ export async function createOrder(payload) {
   const json = await readJson(res);
   if (!json.ok) throw new Error(json.error || "สั่งซื้อไม่สำเร็จ");
   return json.data; // { orderId, total }
+}
+
+// ✅ NEW: ดูออเดอร์จากเบอร์โทร
+export async function listOrdersByPhone(phone) {
+  if (!API_URL || !API_URL.includes("/exec")) throw new Error("API_URL ไม่ถูกต้อง");
+
+  const q = encodeURIComponent(String(phone || "").trim());
+  if (!q) throw new Error("กรุณาใส่เบอร์โทร");
+
+  const res = await fetch(`${API_URL}?action=listOrdersByPhone&phone=${q}`, {
+    method: "GET",
+  });
+
+  const json = await readJson(res);
+  if (!json.ok) throw new Error(json.error || "โหลดออเดอร์ไม่สำเร็จ");
+  return json.data || []; // [{orderId, createdAt, productName, qty, total}]
 }
